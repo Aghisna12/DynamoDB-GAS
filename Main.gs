@@ -42,18 +42,22 @@ function get_items() {
 }
 
 function update_item(_token, _nama, _jenis_kelamin) {
-  var dynamodb = new DynamoDB(access_key, secret_key, region);
-  var index = get_last_id();
-  if (index != -1) {
-    var instance = dynamodb.updateItem({user_id: {N: String(index)}}, {nama: {Value: {S: _nama}}, jenis_kelamin: {Value: {S: _jenis_kelamin}}}, 'daftar_hadir');
-    return instance;
+  if (_token == token) {
+    var dynamodb = new DynamoDB(access_key, secret_key, region);
+    var index = get_last_id();
+    if (index != -1) {
+      var instance = dynamodb.updateItem({user_id: {N: String(index)}}, {nama: {Value: {S: _nama}}, jenis_kelamin: {Value: {S: _jenis_kelamin}}}, 'daftar_hadir');
+      return instance;
+    }
   }
 }
 
 function delete_item(_token, _uid) {
-  var dynamodb = new DynamoDB(access_key, secret_key, region);
-  var instance = dynamodb.deleteItem({user_id: {N: _uid}}, 'daftar_hadir');
-  return instance;
+  if (_token == token) {
+    var dynamodb = new DynamoDB(access_key, secret_key, region);
+    var instance = dynamodb.deleteItem({user_id: {N: _uid}}, 'daftar_hadir');
+    return instance;
+  }
 }
 
 function responseCors(data) {
@@ -65,7 +69,7 @@ function responseCors(data) {
 }
 
 function auth(_token) {
-  if (token == token) {
+  if (_token == token) {
     return "success";
   }
   return "error";
@@ -96,3 +100,4 @@ function doGet(param) {
       return responseCors("error");
   }
 }
+
